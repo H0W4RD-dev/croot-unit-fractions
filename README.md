@@ -98,7 +98,8 @@ The `liminf` statement is also given in elementary form:
   `o(1)` rather than `O(log log N / log N)`; neither the general rational `r` nor the explicit
   error term is needed to answer the problem.
 * The prime-number-theorem inputs of the paper are replaced by Chebyshev-type estimates (in
-  Mathlib: `Chebyshev.theta_le_log4_mul_x`, `Nat.two_pow_le_mul_lcmUpto`, …):
+  Mathlib: `Chebyshev.theta_ge'`, `Chebyshev.theta_le_log4_mul_x`, `Chebyshev.psi_ge'`,
+  `Chebyshev.psi_le_const_mul_self`, `Chebyshev.pi_le_log4_mul_div`):
   prime counts in ranges `(x, 2.7x]` (`Croot/Primes.lean`), positive density of
   prime-power-smooth numbers via products of primes from disjoint ranges
   (`Croot/SmoothDensity.lean`), and the core construction with cofactors `p^b ℓ₁ ℓ₂ k`
