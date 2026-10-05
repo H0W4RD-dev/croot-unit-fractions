@@ -1,4 +1,5 @@
 import Croot.Main
+import Croot.Erdos286
 
 /-!
 # Self-contained restatements of the main results
@@ -65,8 +66,43 @@ theorem erdos_graham_q2_plain : Filter.liminf
     Real.exp 1 :=
   Croot.liminf_ratio_eq_exp_one
 
+/-- **Erdős Problem #286, erdosproblems.com / formal-conjectures phrasing**: the statement
+`Erdos286.erdos_286` of google-deepmind/formal-conjectures, verbatim except that `answer(True)`
+is replaced by its value `True`. -/
+theorem erdos_286_formal_conjectures : True ↔ ∃ o : ℕ → ℝ, Tendsto o atTop (nhds 0) ∧
+    ∀ᶠ k : ℕ in atTop, ∃ a b : ℝ, b - a = (Real.exp 1 - 1 + o k) * k ∧
+      ∃ S : Finset ℕ, S.card = k ∧ 0 ∉ S ∧ ∑ n ∈ S, (1 : ℝ) / n = 1 ∧
+        ∀ n ∈ S, (n : ℝ) ∈ Set.Icc a b :=
+  Croot.erdos_286_iff
+
+/-- `k` distinct positive integers in `[a, b]`, listed increasingly, with reciprocal sum `1`
+(the encoding used by the comparator challenge `ComparatorChallenges/ErdosProblems/Erdos286.lean`
+of plby/lean-proofs). -/
+def IntervalRep (k : ℕ) (a b : ℝ) : Prop :=
+  ∃ n : Fin k → ℕ, StrictMono n ∧ 0 ∉ Set.range n ∧ 1 = ∑ i, (1 : ℝ) / n i ∧
+    ∀ i, (n i : ℝ) ∈ Set.Icc a b
+
+/-- Erdős Problem #286 in the comparator-challenge encoding (little-o error term, `2 ≤ k`). -/
+theorem erdos_286_comparator_form : ∃ o : ℕ → ℝ, o =o[atTop] (1 : ℕ → ℝ) ∧
+    ∀ᶠ k : ℕ in atTop, 2 ≤ k ∧ ∃ a b : ℝ, b - a = (Real.exp 1 - 1 + o k) * k ∧
+      IntervalRep k a b := by
+  refine ⟨fun _ => 0, Asymptotics.isLittleO_zero _ _, ?_⟩
+  filter_upwards [Croot.erdos_286_zero, Filter.eventually_ge_atTop 2] with k hk hk2
+  obtain ⟨a, b, hab, S, hS, h0, hsum, hmem⟩ := hk
+  refine ⟨hk2, a, b, by rw [hab]; ring, S.orderEmbOfFin hS, (S.orderEmbOfFin hS).strictMono,
+    ?_, ?_, fun i => hmem _ (Finset.orderEmbOfFin_mem S hS i)⟩
+  · rw [Finset.range_orderEmbOfFin]
+    exact_mod_cast h0
+  · have e : ∑ i, (1 : ℝ) / ((S.orderEmbOfFin hS) i : ℕ) = ∑ n ∈ S, (1 : ℝ) / n := by
+      conv_rhs => rw [← Finset.map_orderEmbOfFin_univ S hS]
+      rw [Finset.sum_map]
+      rfl
+    rw [e, hsum]
+
 #print axioms croot_upper_plain
 #print axioms croot_lower_plain
 #print axioms shortest_interval_plain
 #print axioms erdos_graham_q1_plain
 #print axioms erdos_graham_q2_plain
+#print axioms erdos_286_formal_conjectures
+#print axioms erdos_286_comparator_form

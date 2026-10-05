@@ -105,3 +105,20 @@ of `H((N,M] \ D)`, which is `⌊N^{1/12}⌋`- hence `⌊M^{1/5}⌋`-pp-smooth. P
 `liminf_ratio_eq_exp_one` (`liminf x_k/x₁ = e`; the lower bound uses
 `x_k ≥ e(x₁ − 1)` from `croot_lower`, which leaves only finitely many sets with
 `x_k ≤ (e − ε) x₁`).
+
+## 4. The erdosproblems.com phrasing of #286 (`Croot/Erdos286.lean`)
+
+**Statement (`erdos_286_zero`).** For all large `k` there are `k` distinct positive integers with
+reciprocal sum `1` inside an interval of width `(e − 1) k`; hence `erdos_286` (width
+`(e − 1 + o(1)) k`, the formal-conjectures statement) with `o ≡ 0`.
+
+*Proof.* Let `ε = 1/1000`, `c = e − 1 + ε`, `N = ⌊k/c⌋` (so `cN ≤ k < c(N+1)`), and let
+`X ⊆ (N, U]`, `U = ⌊(e+ε)N⌋`, be Croot's set (`croot_upper`). Since
+`H((N, U]) ≤ log(U/N) ≤ log(e + ε) ≤ 1 + 1/2000`, the complement `C = (N, U] \ X` has
+`H(C) ≤ 1/2000`, so `#C ≤ U/2000 ≤ 3N/2000`. As `#X + #C = U − N`, we get
+`#X ≤ k ≤ #X + #C + 2`. For `t ∈ [0.13N, 0.139N]` the number `12t ∈ (N, U]` lies in `X` except
+for at most `#C` values of `t`, leaving more than `k − #X` usable `t`. For `k − #X` of them
+replace `1/(12t)` by `1/(21t) + 1/(28t)`. The new denominators satisfy
+`U < 21t ≤ 2.919N < 3.64N ≤ 28t ≤ 3.892N`, so they are new and pairwise distinct. The
+resulting set has exactly `k` elements, reciprocal sum `1`, and lies in
+`(N, 3.892N] ⊆ [N, N + (e − 1)k]`, because `(e − 1)k ≥ (e − 1)cN ≥ 2.9N`.

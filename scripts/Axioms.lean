@@ -1,4 +1,5 @@
 import Croot.Main
+import Croot.Erdos286
 
 /-! Axiom audit for the main results (run with `lake env lean scripts/Axioms.lean`). -/
 
@@ -9,3 +10,5 @@ import Croot.Main
 #print axioms Croot.infinite_admissible_ratio_le
 #print axioms Croot.finite_admissible_ratio_le
 #print axioms Croot.liminf_ratio_eq_exp_one
+#print axioms Croot.erdos_286
+#print axioms Croot.erdos_286_iff

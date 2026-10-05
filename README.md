@@ -76,6 +76,27 @@ The `liminf` statement is also given in elementary form:
 `x_k ≤ (e + ε) x₁`) and `Croot.finite_admissible_ratio_le` (only finitely many have
 `x_k ≤ (e − ε) x₁`).
 
+### The erdosproblems.com phrasing of #286
+
+erdosproblems.com states #286 in terms of the number `k` of terms: *is there an interval `I` of
+width `(e − 1 + o(1))k` and integers `n₁ < ⋯ < n_k ∈ I` with `1 = ∑ 1/nᵢ`?* This phrasing is
+the statement `Erdos286.erdos_286` of google-deepmind/formal-conjectures. It is also proved here
+(`Croot/Erdos286.lean`), as a corollary of Croot's theorem:
+
+```lean
+theorem Croot.erdos_286 : ∃ o : ℕ → ℝ, Tendsto o atTop (nhds 0) ∧
+    ∀ᶠ k : ℕ in atTop, ∃ a b : ℝ, b - a = (Real.exp 1 - 1 + o k) * k ∧
+      ∃ S : Finset ℕ, S.card = k ∧ 0 ∉ S ∧ ∑ n ∈ S, (1 : ℝ) / n = 1 ∧
+        ∀ n ∈ S, (n : ℝ) ∈ Set.Icc a b
+```
+
+In fact `o ≡ 0` works (`Croot.erdos_286_zero`). The width bound in this phrasing is not sharp:
+a `k`-term representation inside `(N, (e + o(1))N]` has `k ≈ (e − 1)N` terms and width `≈ k`.
+To get *exactly* `k` terms for every large `k`, the proof takes Croot's set with `ε = 1/1000` at
+`N = ⌊k/(e − 1 + ε)⌋` and adds the few missing terms with `1/(12t) = 1/(21t) + 1/(28t)`.
+`scripts/Statements.lean` also derives the comparator-challenge encoding of this statement used
+by plby/lean-proofs (`Fin k → ℕ` strictly increasing, `o =o[atTop] 1`, `2 ≤ k`).
+
 ### Statement correspondence
 
 * A finite set `X : Finset ℕ` is the same thing as distinct integers `x₁ < ⋯ < x_k`; `recipSum`
@@ -91,6 +112,8 @@ The `liminf` statement is also given in elementary form:
   filter, i.e. as the sets range over all admissible sets, each counted once.
 * The JSP phrasing ("shortest interval") is `tendsto_shortestEnd`: the least right end point
   `U` of an interval `(N, U]` containing such a set satisfies `U ∼ e N`.
+* The erdosproblems.com phrasing (in terms of the number of terms `k`) is `erdos_286`, verbatim
+  the formal-conjectures statement (with `answer(True)` replaced by `True`: `erdos_286_iff`).
 
 ## Differences from the paper (scope)
 
@@ -128,6 +151,7 @@ results for the selected commit are recorded in [`VERIFICATION.md`](VERIFICATION
 | `Croot/Asymptotics.lean` | elementary "for `M` large" inequalities |
 | `Croot/Prop2.lean` | Croot's Proposition 2 (exact representation in `(M, (1+η)M]`) |
 | `Croot/Main.lean` | assembly: `croot_upper`, `croot_lower`, Erdős–Graham answers |
+| `Croot/Erdos286.lean` | the erdosproblems.com / formal-conjectures phrasing of #286 |
 
 ## Building and checking
 
@@ -151,12 +175,16 @@ lake env lean scripts/Statements.lean
 'Croot.infinite_admissible_ratio_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Croot.finite_admissible_ratio_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Croot.liminf_ratio_eq_exp_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Croot.erdos_286' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Croot.erdos_286_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 `scripts/Statements.lean` restates the main results using only Mathlib notions (no
 definitions from this repository — e.g. the sum `∑ x ∈ X, (1 : ℚ) / x` instead of
 `recipSum`) and derives them from the theorems above, so that the statements can be checked
-without reading the project's definitions.
+without reading the project's definitions. It also contains the formal-conjectures statement of
+Erdős #286 (`erdos_286_formal_conjectures`) and the comparator-challenge encoding
+(`erdos_286_comparator_form`).
 
 The project contains no `sorry`, `admit`, `axiom` declarations or `native_decide`.
 
