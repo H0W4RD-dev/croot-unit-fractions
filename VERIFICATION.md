@@ -1,7 +1,9 @@
 # Verification record
 
-This record describes proof commit **`34c26c181bfcd39ba94d510b994b7aa2c33f3606`** (the commit
-selected for submission). Later commits only add documentation such as this file.
+This record describes proof commit **`a8b4cac51866d7d9cf78b0ef70266feee06b3237`** (the commit
+selected for submission). Later commits only add documentation such as this file. An earlier
+record for commit `34c26c181bfcd39ba94d510b994b7aa2c33f3606` (identical except that it lacks
+`Croot/Erdos286.lean` and the corresponding script entries) gave the same results.
 
 Date: 2026-10-05. Platform: Windows 11, `x86_64-w64-windows-gnu`.
 
@@ -16,11 +18,11 @@ Date: 2026-10-05. Platform: Windows 11, `x86_64-w64-windows-gnu`.
 ## Clean build of the selected commit
 
 ```
-git clone <repo> && git checkout 34c26c181bfcd39ba94d510b994b7aa2c33f3606
+git clone <repo> && git checkout a8b4cac51866d7d9cf78b0ef70266feee06b3237
 lake build
-✔ Built Croot.Basic / Harmonic / Asymptotics / Fourier / Lemma1 / ElimAlgebra / Primes /
-  SmoothExist / Core / SmoothDensity / Prop1 / Prop2 / Main
-Build completed successfully (3329 jobs).      -- no errors, no warnings
+✔ Built Croot.Basic / Asymptotics / ElimAlgebra / Harmonic / Fourier / Lemma1 / Primes /
+  Core / SmoothExist / SmoothDensity / Prop1 / Prop2 / Main / Erdos286
+Build completed successfully (3330 jobs).      -- no errors, no warnings
 ```
 
 `grep` for `sorry`, `admit`, `native_decide` and `axiom` declarations in `Croot/` and
@@ -36,9 +38,11 @@ Build completed successfully (3329 jobs).      -- no errors, no warnings
 'Croot.infinite_admissible_ratio_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Croot.finite_admissible_ratio_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Croot.liminf_ratio_eq_exp_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Croot.erdos_286' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Croot.erdos_286_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-## Mathlib-only restatements (`lake env lean scripts/Statements.lean`)
+## Restatements (`lake env lean scripts/Statements.lean`)
 
 ```
 'croot_upper_plain' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -46,6 +50,8 @@ Build completed successfully (3329 jobs).      -- no errors, no warnings
 'shortest_interval_plain' depends on axioms: [propext, Classical.choice, Quot.sound]
 'erdos_graham_q1_plain' depends on axioms: [propext, Classical.choice, Quot.sound]
 'erdos_graham_q2_plain' depends on axioms: [propext, Classical.choice, Quot.sound]
+'erdos_286_formal_conjectures' depends on axioms: [propext, Classical.choice, Quot.sound]
+'erdos_286_comparator_form' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 ## `lean-verify` mechanical checks
@@ -58,18 +64,21 @@ the selected commit, with `scripts/Statements.lean` copied to the untracked harn
 * `preflight`: `ready_for_target_checks: true`, no issues, HEAD = selected commit.
 * `run` (explicit `lake build +Module`, `lake env lean` on each source, `#check`, `#print`,
   `#print axioms` for each target): `mechanical_status: standard_axioms_only`, exit code 0,
-  `inputs_stable: true`, for all ten targets: `Croot.croot_upper`, `Croot.croot_lower`,
-  `Croot.tendsto_shortestEnd`, `Croot.erdos_graham_q1`, `Croot.liminf_ratio_eq_exp_one`,
-  `Croot.infinite_admissible_ratio_le`, `Croot.finite_admissible_ratio_le`,
-  `erdos_graham_q1_plain`, `erdos_graham_q2_plain`, `shortest_interval_plain`.
+  `inputs_stable: true`, HEAD unchanged, for all fourteen targets: `Croot.croot_upper`,
+  `Croot.croot_lower`, `Croot.tendsto_shortestEnd`, `Croot.erdos_graham_q1`,
+  `Croot.liminf_ratio_eq_exp_one`, `Croot.infinite_admissible_ratio_le`,
+  `Croot.finite_admissible_ratio_le`, `Croot.erdos_286`, `Croot.erdos_286_iff`,
+  `erdos_graham_q1_plain`, `erdos_graham_q2_plain`, `shortest_interval_plain`,
+  `erdos_286_formal_conjectures`, `erdos_286_comparator_form`.
 
 ## Requirement coverage
 
-| Original requirement (Erdős–Graham 1980, p. 33, as quoted by Croot 2001) | Lean |
+| Original requirement | Lean |
 | --- | --- |
-| Infinitely many sets `2 ≤ x₁ < ⋯ < x_k`, `∑ 1/xᵢ = 1`, with `x_k/x₁` bounded | `Croot.erdos_graham_q1`, `erdos_graham_q1_plain` |
-| `liminf x_k/x₁` over all such sets equals `e` | `Croot.liminf_ratio_eq_exp_one`, `erdos_graham_q2_plain` (elementary form: `Croot.infinite_admissible_ratio_le`, `Croot.finite_admissible_ratio_le`) |
-| Catalog phrasing: shortest interval `(N, U]` containing such denominators has `U ∼ eN` | `Croot.tendsto_shortestEnd`, `shortest_interval_plain`; `Croot.croot_upper`, `Croot.croot_lower` |
+| Erdős–Graham Q1 (1980, p. 33, as quoted by Croot 2001): infinitely many sets `2 ≤ x₁ < ⋯ < x_k`, `∑ 1/xᵢ = 1`, with `x_k/x₁` bounded | `Croot.erdos_graham_q1`, `erdos_graham_q1_plain` |
+| Erdős–Graham Q2: `liminf x_k/x₁` over all such sets equals `e` | `Croot.liminf_ratio_eq_exp_one`, `erdos_graham_q2_plain` (elementary form: `Croot.infinite_admissible_ratio_le`, `Croot.finite_admissible_ratio_le`) |
+| JSP-000243 catalog phrasing: shortest interval `(N, U]` containing such denominators has `U ∼ eN` | `Croot.tendsto_shortestEnd`, `shortest_interval_plain`; `Croot.croot_upper`, `Croot.croot_lower` |
+| erdosproblems.com #286 phrasing: for large `k`, `k` terms in an interval of width `(e − 1 + o(1))k` | `Croot.erdos_286`, `Croot.erdos_286_iff`, `erdos_286_formal_conjectures` (formal-conjectures statement verbatim), `erdos_286_comparator_form` |
 
 ## Limitations
 
