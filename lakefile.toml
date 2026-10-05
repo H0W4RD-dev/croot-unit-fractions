@@ -1,0 +1,16 @@
+name = "croot"
+defaultTargets = ["Croot"]
+
+[leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
+warn.sorry = true
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.1"
+
+[[lean_lib]]
+name = "Croot"
+globs = ["Croot.+"]
