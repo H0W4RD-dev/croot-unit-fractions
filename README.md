@@ -107,7 +107,8 @@ The `liminf` statement is also given in elementary form:
   (e.g. denominators `⌊N^{1/12}⌋`-pp-smooth after Proposition 1; `y = ⌊M^{1/5}⌋`,
   `X = M^{3/4} (log M)^4` in Proposition 2).
 
-A detailed account of the proof as formalized is in [`PROOF.md`](PROOF.md).
+A detailed account of the proof as formalized is in [`PROOF.md`](PROOF.md); build and audit
+results for the selected commit are recorded in [`VERIFICATION.md`](VERIFICATION.md).
 
 ## File overview
 
